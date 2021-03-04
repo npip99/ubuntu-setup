@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# List ec2_ids here
+# ec2_ids[EC2_NAME]="EC2_ID"
