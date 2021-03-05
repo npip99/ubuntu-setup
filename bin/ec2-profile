@@ -14,10 +14,5 @@ declare -A ec2_ids
 declare -A ec2_profiles
 . "$DIR/.ec2-machines"
 
-EC2_ID="${ec2_ids[$1]}"
-if [[ -z "$EC2_ID" ]]; then
-  echo "Could not find EC2_ID \"$1\""
-  exit 1
-else
-  echo $EC2_ID
-fi
+EC2_PROFILE="${ec2_profiles[$1]-default}"
+echo $EC2_PROFILE
