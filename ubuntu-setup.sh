@@ -1,7 +1,10 @@
 #!/bin/bash
+set -e
 
 echo "Warning! This will make potentially damaging changing to your $HOME directory."
 echo "Please review the contents of ./ubuntu-setup.sh before running this script"
+echo "Do not run as root, we call sudo inside of this script when needed."
+echo "Make sure to run this script from the directory that the script is located in"
 echo "Continue? (y/n)"
 read -rp "" input
 if [[ ! "$input" =~ ^[yY](es)?$ ]]; then
@@ -10,6 +13,7 @@ if [[ ! "$input" =~ ^[yY](es)?$ ]]; then
 fi
 
 # Install desired programs
+sudo apt update
 sudo apt install speedtest-cli bbswitch-dkms -y
 
 # Copy the binaries directory
@@ -17,7 +21,7 @@ cp -r ./bin ~/bin
 # Add ~/bin path to bashrc, with highest priority (earliest in path)
 cat >>~/.bashrc <<EOF
 # Add custom bin
-export PATH="/home/npip99/bin:$PATH"
+export PATH="/home/$HOME/bin:\$PATH"
 EOF
 
 # Add bbswitch to modprobe's loads
