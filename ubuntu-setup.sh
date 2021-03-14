@@ -13,8 +13,9 @@ if [[ ! "$input" =~ ^[yY](es)?$ ]]; then
 fi
 
 # Install desired programs
+sudo add-apt-repository ppa:slimbook/slimbook
 sudo apt update
-sudo apt install speedtest-cli bbswitch-dkms -y
+sudo apt install slimbookbattery speedtest-cli bbswitch-dkms -y
 
 # Copy the binaries directory
 cp -r ./bin ~/bin
