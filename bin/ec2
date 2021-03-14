@@ -1,3 +1,4 @@
 #!/bin/bash
+set -e
 ssh -i $1.pem ubuntu@$(ec2-ip $1)
 

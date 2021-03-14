@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Get current directory
 SOURCE="${BASH_SOURCE[0]}"

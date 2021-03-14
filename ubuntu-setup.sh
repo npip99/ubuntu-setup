@@ -9,11 +9,31 @@ if [[ ! "$input" =~ ^[yY](es)?$ ]]; then
   exit 1
 fi
 
-sudo apt install speedtest-cli -y
-# Make the terminal look like Ubuntu 18, even on Ubuntu 20+
-dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
+# Install desired programs
+sudo apt install speedtest-cli bbswitch-dkms -y
+
 # Copy the binaries directory
 cp -r ./bin ~/bin
+# Add ~/bin path to bashrc, with highest priority (earliest in path)
+cat >>~/.bashrc <<EOF
+# Add custom bin
+export PATH="/home/npip99/bin:$PATH"
+EOF
+
+# Add bbswitch to modprobe's loads
+sudo tee /etc/modules-load.d/bbswitch.conf >/dev/null <<<'bbswitch'
+# Replace first line of PostSession with #!/bin/bash
+sudo sed -i "1s/.*/\#\!\/bin\/bash/" /etc/gdm3/PostSession/Default
+# Add check to turn off GPU if intel GPU is selected on logoff
+sudo tee /etc/gdm3/PostSession/Default >/dev/null <<EOF
+if [[ "\$(prime-select query)" == "intel" ]]; then
+  echo OFF >/proc/acpi/bbswitch
+fi
+EOF
+
+# Make the terminal look like Ubuntu 18, even on Ubuntu 20+
+dconf load /org/gnome/terminal/legacy/profiles:/ < gnome-terminal-profiles.dconf
+
 # Transform home folders to lowercase
 cp ./user-dirs.dirs ~/.config
 cp ./bookmarks ~/.config/gtk-3.0
@@ -25,9 +45,4 @@ mv ~/Music ~/music
 mv ~/Pictures ~/pictures
 mv ~/Public ~/public
 rmdir ~/Templates
-# Add ~/bin path to bashrc, with highest priority (earliest in path)
-cat >>~/.bashrc <<EOF
-# Add custom bin
-export PATH="/home/npip99/bin:$PATH"
-EOF
 
